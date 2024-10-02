@@ -1,8 +1,26 @@
 const { response } = require('express')
 const professorService = require('../services/ProfessorService')
 
-module.exports = {
 
+module.exports = {
+    //autenticação de login
+    loginProfessor: async (request, response) => {
+        const { email, senha } = request.body;
+    
+        if (!email || !senha) {
+            return response.status(400).json({ error: "Email e senha são obrigatórios." });
+        }
+    
+        const professores = await professorService.searchProfessor(senha, email);
+    
+        if (professores.length > 0) {
+            response.status(200).json({ id: professores[0].id, nome: professores[0].nome });
+        } else {
+            response.status(401).json({ error: "Credenciais inválidas." });
+        }
+    },
+    
+    //metodo para buscar todos os professores
     findALLprof: async (request, response) => {
         let json = { error: "", result: [] };
     
@@ -25,7 +43,7 @@ module.exports = {
         }
     },
     
-
+    //metodo para validação de existencia de conta
     readyProfessor: async (request, response) => {
         let json = { error: "", result: [] }
 
@@ -51,7 +69,7 @@ module.exports = {
         }
     },
 
-
+    //metodo para criação de professor  
     createProfessor: async (request, response) => {
         let json = { error: "", result: {} }
 
@@ -79,6 +97,7 @@ module.exports = {
         response.status(201).json(json)
     },
 
+    //metodo para atualização de professor
     updateProfessor: async (request, response) => {
 
         let json = { error:"",result: {}}
@@ -103,6 +122,7 @@ module.exports = {
         response.json(json)
     },
 
+    //metodo para deletar
     deleteProfessores: async (request, response) => {
         
         let json = { error : "", result: "" }
