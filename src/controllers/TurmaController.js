@@ -1,16 +1,13 @@
-const { response } = require('express')
-const turmaService = require('../services/TurmaService')
+const turmaService = require('../services/TurmaService');
 
 module.exports = {
-
-    //metodo para consultar as turmas
     findALLTurmas: async (request, response) => {
         let json = { error: "", result: [] };
-        const professor_id = request.professorId; 
-    
+        
+
         try {
-            let turmas = await turmaService.readTurmas(professor_id);
-            
+            let turmas = await turmaService.readTurmas();
+
             for (let turma of turmas) {
                 json.result.push({
                     id: turma.id,
@@ -19,85 +16,100 @@ module.exports = {
                     professor_id: turma.professor_id
                 });
             }
-    
+
             response.status(200).json(json);
         } catch (error) {
             json.error = "Erro ao buscar turmas: " + error.message;
             response.status(500).json(json);
         }
     },
-    
-    
 
-    //metodo para criar turmas
     createTurmas: async (request, response) => {
-        let json = { error: "", result: {} }
+        let json = { error: "", result: {} };
+        const { nome, periodo_letivo,professor_id } = request.body;
 
-        let nome = request.body.nome
-        let periodo_letivo = request.body.periodo_letivo
-        let professor_id = request.body.professor_id
 
         if (nome && periodo_letivo && professor_id) {
-
-            let turmas = await turmaService.createTurmas(nome, periodo_letivo, professor_id)
-
-            json.result = {
-                id: turmas.insertId,
-                nome,
-                periodo_letivo,
-                professor_id
-
+            try {
+                let turmas = await turmaService.createTurmas(nome, periodo_letivo, professor_id);
+                json.result = {
+                    id: turmas.insertId,
+                    nome,
+                    periodo_letivo,
+                    professor_id
+                };
+                response.status(201).json(json);
+            } catch (error) {
+                json.error = "Erro ao criar turma: " + error.message;
+                response.status(500).json(json);
             }
-
         } else {
-            json.error = "Campos imcompletos!"
+            json.error = "Campos incompletos!";
+            response.status(400).json(json);
         }
-
-        response.status(200).json(json)
-
     },
 
-    //metodo para atualizar turma
     updateTurmas: async (request, response) => {
-
-        let json = { error: "", result: {} }
-
-        let id = request.params.id
-        let nome = request.body.nome
-        let periodo_letivo = request.body.periodo_letivo
-        let professor_id = request.body.professor_id
+        let json = { error: "", result: {} };
+        const id = request.params.id;
+        const { nome, periodo_letivo, professor_id } = request.body;
 
         if (id) {
-
-            await turmaService.updateTurmas(id, nome, periodo_letivo, professor_id)
-
-            json.result = { id, nome, periodo_letivo, professor_id }
-
-
+            try {
+                await turmaService.updateTurmas(id, nome, periodo_letivo, professor_id);
+                json.result = { id, nome, periodo_letivo, professor_id };
+                response.json(json);
+            } catch (error) {
+                json.error = "Erro ao atualizar turma: " + error.message;
+                response.status(500).json(json);
+            }
         } else {
-            json.error = "Error no ID"
-
+            json.error = "Erro no ID";
+            response.status(400).json(json);
         }
-
-        response.json(json)
     },
 
-    //metodo para deletar turma
     deleteTurmas: async (request, response) => {
-
-        let json = { error: "", result: "" }
-
-        let id = request.params.id
+        let json = { error: "", result: "" };
+        const id = request.params.id;
 
         if (id) {
-            await turmaService.deleteTurmas(id)
-            json.result = `Turma deletada com sucesso ID:${id}`
+            try {
+                await turmaService.deleteTurmas(id);
+                json.result = `Turma deletada com sucesso ID: ${id}`;
+                response.json(json);
+            } catch (error) {
+                json.error = "Erro ao deletar turma: " + error.message;
+                response.status(500).json(json);
+            }
         } else {
-            json.error = "Erro no ID!"
+            json.error = "Erro no ID!";
+            response.status(400).json(json);
         }
-
-        response.json(json)
-
     },
-
-}
+    findALLatividadesByTurma: async (request, response) => {
+        let json = { error: "", result: [] };
+        let turma_id = request.params.id;
+    
+        try {
+            let atvs = await atividadeService.readAtividadeByTurma(turma_id); // Remove o professor_id
+    
+            for (let atividade of atvs) {
+                json.result.push({
+                    id: atividade.id,
+                    nome: atividade.nome,
+                    descricao: atividade.descricao,
+                    data_entrega: atividade.data_entrega,
+                    peso_nota: atividade.peso_nota,
+                    turma_id: atividade.turma_id,
+                });
+            }
+    
+            response.status(200).json(json);
+        } catch (error) {
+            json.error = "Erro ao buscar atividades: " + error.message;
+            response.status(500).json(json);
+        }
+    }
+    
+};

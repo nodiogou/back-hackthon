@@ -3,7 +3,6 @@ const professorService = require('../services/ProfessorService')
 
 
 module.exports = {
-    //autenticação de login
     loginProfessor: async (request, response) => {
         const { email, senha } = request.body;
     
@@ -20,7 +19,6 @@ module.exports = {
         }
     },
     
-    //metodo para buscar todos os professores
     findALLprof: async (request, response) => {
         let json = { error: "", result: [] };
     
@@ -43,7 +41,7 @@ module.exports = {
         }
     },
     
-    //metodo para validação de existencia de conta
+
     readyProfessor: async (request, response) => {
         let json = { error: "", result: [] }
 
@@ -69,7 +67,7 @@ module.exports = {
         }
     },
 
-    //metodo para criação de professor  
+
     createProfessor: async (request, response) => {
         let json = { error: "", result: {} }
 
@@ -97,7 +95,6 @@ module.exports = {
         response.status(201).json(json)
     },
 
-    //metodo para atualização de professor
     updateProfessor: async (request, response) => {
 
         let json = { error:"",result: {}}
@@ -122,7 +119,6 @@ module.exports = {
         response.json(json)
     },
 
-    //metodo para deletar
     deleteProfessores: async (request, response) => {
         
         let json = { error : "", result: "" }

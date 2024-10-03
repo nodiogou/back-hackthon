@@ -9,7 +9,7 @@ const atividadesController = require('./controllers/AtividadeController');
 route.use(cors());
 
 //Endpoints - TURMA
-route.get('/turma', turmaController.findALLTurmas);
+route.get('/turma', turmaController.findALLTurmas); 
 route.post('/turma', turmaController.createTurmas);
 route.put('/turma/:id', turmaController.updateTurmas);
 route.delete('/turma/:id', turmaController.deleteTurmas);
@@ -22,7 +22,7 @@ route.put('/prof/:id', professorController.updateProfessor);
 route.delete('/prof/:id', professorController.deleteProfessores);
 
 //Endpoints - ATIVIDADES
-route.get('/atividades/:turma_id', atividadesController.findALLatividadesByTurma);
+route.get('/atividades/:id', atividadesController.findALLatividadesByTurma);
 route.post('/atividades', atividadesController.createAtidades);
 route.put('/atividades/:id', atividadesController.updateAtividades);
 route.delete('/atividades/:id', atividadesController.deleteAtividades);

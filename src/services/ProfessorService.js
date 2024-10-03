@@ -2,7 +2,7 @@ const database = require('../database');
 
 
 module.exports = {
-    //metodo que traz todos os professores
+
     readProfessor: () => {
         return new Promise((resolve, reject) => {
             database.query(`SELECT * FROM professores`, 
@@ -16,7 +16,6 @@ module.exports = {
         })
     },
 
-    //metodo para selecionar professor referent ao email e senha
     searchProfessor: (senha, email) => {
         return new Promise(
             (resolve, reject) => {
@@ -31,7 +30,6 @@ module.exports = {
         )
     },
 
-    //metodo para cadastrar um professor
     createProfessor: (nome, senha, email) => {
         return new Promise(
             (resolve, reject) => {
@@ -46,7 +44,6 @@ module.exports = {
             })
     },
 
-    //metodo para atualizar um professor
     updateProfessor: (senha, email) => {
         return new Promise(
             (resolve,reject) => {
@@ -63,7 +60,6 @@ module.exports = {
         
     },
 
-    //metodo para deletar um professor
     deleteProfessor: (id) => {
         return new Promise(
             (resolve,reject) => {
