@@ -1,13 +1,19 @@
 const turmaService = require('../services/TurmaService');
 
 module.exports = {
-    findALLTurmas: async (request, response) => {
+    findTurmas: async (request, response) => {
         let json = { error: "", result: [] };
-        
-
+    
+        const email = request.params.email; 
+    
+        if (!email) {
+            json.error = "E-mail do professor não fornecido.";
+            return response.status(400).json(json);
+        }
+    
         try {
-            let turmas = await turmaService.readTurmas();
-
+            let turmas = await turmaService.readTurmas(email); 
+    
             for (let turma of turmas) {
                 json.result.push({
                     id: turma.id,
@@ -16,14 +22,14 @@ module.exports = {
                     professor_id: turma.professor_id
                 });
             }
-
+    
             response.status(200).json(json);
         } catch (error) {
             json.error = "Erro ao buscar turmas: " + error.message;
             response.status(500).json(json);
         }
     },
-
+    
     createTurmas: async (request, response) => {
         let json = { error: "", result: {} };
         const { nome, periodo_letivo,professor_id } = request.body;
@@ -92,7 +98,7 @@ module.exports = {
         let turma_id = request.params.id;
     
         try {
-            let atvs = await atividadeService.readAtividadeByTurma(turma_id); // Remove o professor_id
+            let atvs = await atividadeService.readAtividadeByTurma(turma_id); 
     
             for (let atividade of atvs) {
                 json.result.push({

@@ -9,7 +9,7 @@ const atividadesController = require('./controllers/AtividadeController');
 route.use(cors());
 
 //Endpoints - TURMA
-route.get('/turma', turmaController.findALLTurmas); 
+route.get('/turma/:email', turmaController.findTurmas); 
 route.post('/turma', turmaController.createTurmas);
 route.put('/turma/:id', turmaController.updateTurmas);
 route.delete('/turma/:id', turmaController.deleteTurmas);

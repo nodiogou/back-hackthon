@@ -1,18 +1,32 @@
 const database = require('../database');
 
 module.exports = {
-    readTurmas: () => {
+    readTurmas: (email) => {
         return new Promise((resolve, reject) => {
-            database.query(`SELECT * FROM turmas`, 
-            (err, result) => {
+            database.query(`SELECT id FROM professores WHERE email = ?`, [email], (err, result) => {
                 if (err) {
                     reject(err);
                     return;
                 }
-                resolve(result);
+    
+                if (result.length === 0) {
+                    resolve([]); 
+                    return;
+                }
+    
+                const professorId = result[0].id;
+    
+                database.query(`SELECT * FROM turmas WHERE professor_id = ?`, [professorId], (err, turmas) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    resolve(turmas);
+                });
             });
         });
     },
+    
 
     createTurmas: (nome, periodo_letivo, professor_id) => {
         return new Promise((resolve, reject) => {
